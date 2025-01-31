@@ -214,7 +214,7 @@ def main():
         return
     
     # Step 2: Ask the user for markdown file names (comma-separated or range)
-    input_str = input("Enter markdown file names (comma-separated or range, e.g., '1,2,3' or '1-3'): ").strip()
+    input_str = input("Enter markdown file names: ").strip()
     file_numbers = parse_file_names(input_str)
     
     if not file_numbers:
