@@ -1,0 +1,42 @@
+import os
+import shutil
+
+# Navigate to the ../books folder
+books_folder = os.path.join('..', 'books')
+if not os.path.exists(books_folder):
+    print(f"The folder {books_folder} does not exist.")
+    exit()
+
+# Ask the user to enter a name
+book_name = input("Enter the name of the book (e.g., 'The Girl on the Train'): ")
+
+# Create a folder with the entered name
+book_folder_path = os.path.join(books_folder, book_name)
+if not os.path.exists(book_folder_path):
+    os.makedirs(book_folder_path)
+    print(f"Created folder: {book_folder_path}")
+else:
+    print(f"Folder already exists: {book_folder_path}")
+
+# Get a list of all files in the folder
+files = [f for f in os.listdir(book_folder_path) if os.path.isfile(os.path.join(book_folder_path, f))]
+
+# Create a temporary folder to avoid conflicts
+temp_folder = os.path.join(book_folder_path, "temp")
+if not os.path.exists(temp_folder):
+    os.makedirs(temp_folder)
+
+# Move all files to the temporary folder
+for file_name in files:
+    shutil.move(os.path.join(book_folder_path, file_name), os.path.join(temp_folder, file_name))
+
+# Rename the files to 1.md, 2.md, etc., and move them back
+for index, file_name in enumerate(os.listdir(temp_folder), start=1):
+    new_file_name = f"{index}.md"
+    shutil.move(os.path.join(temp_folder, file_name), os.path.join(book_folder_path, new_file_name))
+    print(f"Renamed {file_name} to {new_file_name}")
+
+# Remove the temporary folder
+os.rmdir(temp_folder)
+
+print("File renaming completed.")
