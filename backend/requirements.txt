@@ -1,0 +1,7 @@
+html2text
+openai
+pydantic
+tenacity
+markdown
+htmlmin
+cssmin
