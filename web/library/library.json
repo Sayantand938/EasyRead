@@ -1,0 +1,17 @@
+[
+    {
+        "title": "Brave New World",
+        "link": "pages/Brave New World.html",
+        "cover": "pages/covers/Brave New World.png"
+    },
+    {
+        "title": "Dark Matter",
+        "link": "pages/Dark Matter.html",
+        "cover": "pages/covers/Dark Matter.png"
+    },
+    {
+        "title": "The Da Vinci Code",
+        "link": "pages/The Da Vinci Code.html",
+        "cover": "pages/covers/The Da Vinci Code.png"
+    }
+]
