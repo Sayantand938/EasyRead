@@ -1,0 +1,266 @@
+@import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=Martian+Mono:wght@100..800&family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap");
+@font-face {
+  font-family: "Maple Mono";
+  src: url("../pages/fonts/MapleMono-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Maple Mono";
+  src: url("../pages/fonts/MapleMono-Medium.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Maple Mono";
+  src: url("../pages/fonts/MapleMono-Bold.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+}
+
+body {
+  padding: 20px;
+  background-color: #1e1e1e;
+  color: #f1f1f1;
+  font-size: 1.3rem;
+  line-height: 1.6;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+h1 {
+  color: #dcef4a;
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 1.5rem;
+  border-bottom: 2px solid #dcef4a;
+  padding-bottom: 0.5rem;
+  text-align: center;
+  font-family: "Martian Mono";
+}
+
+h2 {
+  color: #dcef4a;
+  font-size: 1.75rem;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  font-family: "Martian Mono";
+  /* border-bottom: 2px solid #dcef4a; */
+}
+
+h3 {
+  color: #dcef4a;
+  font-size: 1.5rem;
+  margin-top: 1.75rem;
+  margin-bottom: 0.75rem;
+  font-family: "Martian Mono";
+}
+
+h4,
+h5,
+h6 {
+  color: #dcef4a;
+  font-size: 1.25rem;
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+  font-family: "Martian Mono";
+}
+
+p {
+  margin: 1rem 0;
+  color: #f1f1f1;
+  font-family: "Maple Mono", monospace;
+  font-weight: 500;
+}
+
+a {
+  color: #dcef4a;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+a:hover {
+  color: #81c784;
+  text-decoration: underline;
+}
+
+pre {
+  background-color: #2e2e2e;
+  padding: 1rem;
+  border-radius: 8px;
+  color: #d1d1d1;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.9rem;
+  overflow-x: auto;
+  margin: 1.5rem 0;
+}
+
+code {
+  color: #ffcc00;
+  font-family: "JetBrains Mono", monospace;
+  background-color: #2e2e2e;
+  padding: 0.2rem 0.4rem;
+  border-radius: 4px;
+  font-size: 0.9rem;
+}
+
+li {
+  font-family: "Maple Mono";
+}
+
+ul,
+ol {
+  margin: 1.5rem 0;
+  padding-left: 1.5rem;
+}
+
+li {
+  margin: 0.75rem 0;
+}
+
+blockquote {
+  border-left: 4px solid #dcef4a;
+  padding-left: 1rem;
+  margin: 1.5rem 0;
+  color: #ccc;
+  font-style: italic;
+}
+
+#toc ul {
+  list-style-type: disc;
+  padding-left: 20px;
+  margin: 0;
+}
+
+#toc li {
+  margin: 0.5rem 0;
+}
+
+#toc a {
+  color: #5ebaee;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+#toc a:hover {
+  color: #dcef4a;
+}
+
+::-webkit-scrollbar {
+  width: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: #2e2e2e;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: white;
+  border-radius: 10px;
+  border: 3px solid #2e2e2e;
+}
+
+#sidebar {
+  position: fixed;
+  top: 0;
+  left: 0; /* Sidebar on the left */
+  width: 300px;
+  background-color: rgba(51, 51, 51, 0.7); /* Semi-transparent background */
+  color: white;
+  height: 100%;
+  display: none; /* Hidden by default */
+  padding: 20px;
+  overflow-y: auto;
+  font-family: "Maple Mono";
+  backdrop-filter: blur(10px); /* Frosted glass effect */
+  border-right: 1px solid rgba(255, 255, 255, 0.1); /* Optional border for better separation */
+}
+
+#toc-container {
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+@media (max-width: 768px) {
+  body {
+    padding: 15px;
+    font-size: 0.9rem;
+  }
+
+  h1 {
+    font-size: 1.75rem;
+  }
+
+  h2 {
+    font-size: 1.5rem;
+  }
+
+  h3 {
+    font-size: 1.25rem;
+  }
+
+  h4,
+  h5,
+  h6 {
+    font-size: 1.1rem;
+  }
+
+  pre {
+    padding: 0.75rem;
+    font-size: 0.85rem;
+  }
+
+  code {
+    font-size: 0.85rem;
+  }
+
+  ul,
+  ol {
+    padding-left: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  body {
+    padding: 12px;
+    font-size: 1.1rem;
+    font-weight: bold;
+  }
+  p {
+    color: #d1d1d1;
+  }
+  h1 {
+    font-size: 1.3rem;
+  }
+
+  h2 {
+    font-size: 1.25rem;
+  }
+
+  h3 {
+    font-size: 1.1rem;
+  }
+
+  h4,
+  h5,
+  h6 {
+    font-size: 1rem;
+  }
+
+  pre {
+    padding: 0.5rem;
+    font-size: 0.8rem;
+  }
+
+  code {
+    font-size: 0.8rem;
+  }
+
+  ul,
+  ol {
+    padding-left: 0.75rem;
+  }
+}
