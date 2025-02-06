@@ -405,7 +405,7 @@ for root, _, files in os.walk(OBSIDIAN_NOTES_DIR):
                 library_data.append({
                     "title": file_name_without_extension,
                     "link": f"books/{file_name_without_extension}/{file_name_without_extension}.html",
-                    "cover": f"books/covers/{file_name_without_extension}.png",
+                    "cover": f"assets/covers/{file_name_without_extension}.png",
                 })
 
 # Define the path to the library.json file

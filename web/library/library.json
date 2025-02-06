@@ -2,26 +2,26 @@
     {
         "title": "Brave New World",
         "link": "books/Brave New World/Brave New World.html",
-        "cover": "books/covers/Brave New World.png"
+        "cover": "assets/covers/Brave New World.png"
     },
     {
         "title": "Dark Matter",
         "link": "books/Dark Matter/Dark Matter.html",
-        "cover": "books/covers/Dark Matter.png"
+        "cover": "assets/covers/Dark Matter.png"
     },
     {
         "title": "Pet Sematary",
         "link": "books/Pet Sematary/Pet Sematary.html",
-        "cover": "books/covers/Pet Sematary.png"
+        "cover": "assets/covers/Pet Sematary.png"
     },
     {
         "title": "Project Hail Mary",
         "link": "books/Project Hail Mary/Project Hail Mary.html",
-        "cover": "books/covers/Project Hail Mary.png"
+        "cover": "assets/covers/Project Hail Mary.png"
     },
     {
         "title": "The Da Vinci Code",
         "link": "books/The Da Vinci Code/The Da Vinci Code.html",
-        "cover": "books/covers/The Da Vinci Code.png"
+        "cover": "assets/covers/The Da Vinci Code.png"
     }
 ]
