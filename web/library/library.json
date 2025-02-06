@@ -10,6 +10,16 @@
         "cover": "pages/covers/Dark Matter.png"
     },
     {
+        "title": "Pet Sematary",
+        "link": "pages/Pet Sematary.html",
+        "cover": "pages/covers/Pet Sematary.png"
+    },
+    {
+        "title": "Project Hail Mary",
+        "link": "pages/Project Hail Mary.html",
+        "cover": "pages/covers/Project Hail Mary.png"
+    },
+    {
         "title": "The Da Vinci Code",
         "link": "pages/The Da Vinci Code.html",
         "cover": "pages/covers/The Da Vinci Code.png"
