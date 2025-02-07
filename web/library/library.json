@@ -1,5 +1,10 @@
 [
     {
+        "title": "Angels and Demons",
+        "link": "books/Angels and Demons/Angels and Demons.html",
+        "cover": "assets/covers/Angels and Demons.png"
+    },
+    {
         "title": "Brave New World",
         "link": "books/Brave New World/Brave New World.html",
         "cover": "assets/covers/Brave New World.png"
@@ -23,5 +28,10 @@
         "title": "The Da Vinci Code",
         "link": "books/The Da Vinci Code/The Da Vinci Code.html",
         "cover": "assets/covers/The Da Vinci Code.png"
+    },
+    {
+        "title": "The Murder of Roger Ackroyd",
+        "link": "books/The Murder of Roger Ackroyd/The Murder of Roger Ackroyd.html",
+        "cover": "assets/covers/The Murder of Roger Ackroyd.png"
     }
 ]

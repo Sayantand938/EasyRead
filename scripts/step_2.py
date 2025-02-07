@@ -1,67 +1,70 @@
 import os
-import shutil
+from natsort import natsorted
 
-def delete_empty_md_files(folder_path):
-    # Iterate through all files in the specified folder
-    for filename in os.listdir(folder_path):
-        file_path = os.path.join(folder_path, filename)
+def is_file_empty(file_path):
+    """
+    Check if a file is empty or contains only blank lines or a single line with fewer than 10 words.
+    """
+    try:
+        with open(file_path, 'r', encoding='utf-8') as file:
+            lines = file.readlines()
+            # Remove blank lines
+            non_blank_lines = [line.strip() for line in lines if line.strip()]
+            # If no non-blank lines, the file is empty
+            if not non_blank_lines:
+                return True
+            # If there's only one line and it has fewer than 10 words, consider it empty
+            if len(non_blank_lines) == 1 and len(non_blank_lines[0].split()) < 10:
+                return True
+            return False
+    except Exception as e:
+        print(f"Error reading file {file_path}: {e}")
+        return False
 
-        # Check if the file is a markdown (.md) file and if it's empty
-        if filename.endswith('.md') and os.path.isfile(file_path):
-            if os.path.getsize(file_path) == 0:
-                print(f"Deleting empty file: {file_path}")
+def process_files():
+    # Step 1: Take input for the folder name from the user
+    folder_name = input("Enter the folder name: ").strip()
+    
+    # Step 2: Construct the path to the folder
+    folder_path = os.path.join('..', 'books', folder_name)
+    
+    # Check if the folder exists
+    if not os.path.exists(folder_path):
+        print(f"The folder '{folder_path}' does not exist.")
+        return
+    
+    # Step 3: Collect all .md files
+    md_files = []
+    for root, dirs, files in os.walk(folder_path):
+        for file in files:
+            if file.endswith('.md'):
+                file_path = os.path.join(root, file)
+                md_files.append(file_path)
+    
+    # Step 4: Sort the files naturally
+    md_files = natsorted(md_files, key=lambda x: os.path.basename(x))
+    
+    # Step 5: Filter out empty files
+    non_empty_files = []
+    for file_path in md_files:
+        if is_file_empty(file_path):
+            print(f"Deleting empty file: {file_path}")
+            try:
                 os.remove(file_path)
-
-def rename_files_sequentially(folder_path):
-    # Get a list of all files in the folder
-    files = [f for f in os.listdir(folder_path) if os.path.isfile(os.path.join(folder_path, f))]
-
-    # Sort files by creation time
-    files.sort(key=lambda f: os.path.getctime(os.path.join(folder_path, f)))
-
-    # Create a temporary folder to avoid conflicts
-    temp_folder = os.path.join(folder_path, "temp")
-    if not os.path.exists(temp_folder):
-        os.makedirs(temp_folder)
-
-    # Move all files to the temporary folder
-    for file_name in files:
-        shutil.move(os.path.join(folder_path, file_name), os.path.join(temp_folder, file_name))
-
-    # Rename the files to 1.md, 2.md, etc., and move them back
-    for index, file_name in enumerate(os.listdir(temp_folder), start=1):
+            except Exception as e:
+                print(f"Error deleting file {file_path}: {e}")
+        else:
+            non_empty_files.append(file_path)
+    
+    # Step 6: Rename the remaining files sequentially
+    for index, file_path in enumerate(non_empty_files, start=1):
         new_file_name = f"{index}.md"
-        shutil.move(os.path.join(temp_folder, file_name), os.path.join(folder_path, new_file_name))
-        print(f"Renamed {file_name} to {new_file_name}")
+        new_file_path = os.path.join(os.path.dirname(file_path), new_file_name)
+        print(f"Renaming '{file_path}' to '{new_file_path}'")
+        try:
+            os.rename(file_path, new_file_path)
+        except Exception as e:
+            print(f"Error renaming file {file_path} to {new_file_path}: {e}")
 
-    # Remove the temporary folder
-    os.rmdir(temp_folder)
-
-def main():
-    # Base directory
-    books_folder = os.path.join('..', 'books')
-    if not os.path.exists(books_folder):
-        print(f"The folder {books_folder} does not exist.")
-        exit()
-
-    # Ask the user to enter a name
-    book_name = input("Enter the name of the book: ")
-
-    # Create a folder with the entered name
-    book_folder_path = os.path.join(books_folder, book_name)
-    if not os.path.exists(book_folder_path):
-        os.makedirs(book_folder_path)
-        print(f"Created folder: {book_folder_path}")
-    else:
-        print(f"Folder already exists: {book_folder_path}")
-
-    # Delete empty .md files in the folder
-    delete_empty_md_files(book_folder_path)
-    print("All empty .md files have been deleted.")
-
-    # Rename the remaining files sequentially
-    rename_files_sequentially(book_folder_path)
-    print("File renaming completed.")
-
-if __name__ == "__main__":
-    main()
+# Run the function
+process_files()
