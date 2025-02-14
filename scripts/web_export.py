@@ -1,145 +1,203 @@
 import os
 import re
-import yaml
 import markdown2
-import json
+import shutil  # For clearing the books folder
+import json  # For handling JSON data
 
-# Retrieve the OBSIDIAN_NOTES_DIR from the environment variable
-OBSIDIAN_NOTES_DIR = os.environ.get('OBSIDIAN_NOTES_DIR')
+def load_env_variable(variable_name):
+    """Load environment variable."""
+    value = os.getenv(variable_name)
+    if not value:
+        raise ValueError(f"Environment variable {variable_name} is not set.")
+    return value
 
-if not OBSIDIAN_NOTES_DIR:
-    print("Environment variable OBSIDIAN_NOTES_DIR is not set.")
-    exit(1)
+def clear_books_folder(books_folder):
+    """Clear all contents in the books folder."""
+    if os.path.exists(books_folder):
+        for item in os.listdir(books_folder):
+            item_path = os.path.join(books_folder, item)
+            if os.path.isfile(item_path) or os.path.islink(item_path):
+                os.unlink(item_path)  # Remove files and symbolic links
+            elif os.path.isdir(item_path):
+                shutil.rmtree(item_path)  # Remove directories
 
-# Define the output directory for the HTML files
-output_dir = os.path.join(os.path.dirname(__file__), '../web/books')
+def clear_library_json(json_file_path):
+    """Clear the contents of the library.json file."""
+    with open(json_file_path, 'w', encoding='utf-8') as f:
+        json.dump([], f)  # Overwrite with an empty list
 
-# Ensure the output directory exists
-os.makedirs(output_dir, exist_ok=True)
+def extract_yaml_frontmatter(file_content):
+    """Extract YAML frontmatter from a markdown file."""
+    match = re.match(r'^---\s*$(.*?)^---\s*$', file_content, re.DOTALL | re.MULTILINE)
+    if match:
+        yaml_frontmatter = match.group(1)
+        remaining_content = file_content[match.end():].strip()
+        return yaml_frontmatter, remaining_content
+    return None, file_content.strip()
 
-# Define the directory for the JSON file
-json_dir = os.path.join(os.path.dirname(__file__), '../web/library')
+def split_into_chunks(content):
+    """Split content into chunks based on ## headings."""
+    # Split content by '##' headings
+    chunks = re.split(r'\n## ', content)
+    # Add back the '##' to the headings (except the first chunk)
+    chunks = [chunks[0]] + [f"## {chunk}" for chunk in chunks[1:]]
+    return chunks
 
-# Ensure the JSON directory exists
-os.makedirs(json_dir, exist_ok=True)
+def sanitize_filename(filename):
+    """Sanitize the filename by removing invalid characters."""
+    return re.sub(r'[\\/*?:"<>|]', '', filename).strip()
 
-# Function to delete all .html files in the output directory
-def delete_html_files(directory):
+def convert_to_html(chunk, file_name_without_extension, heading_title=""):
+    """Convert a Markdown chunk to HTML using the provided template."""
+    html_content = markdown2.markdown(chunk)
+
+    html_template = f"""
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{heading_title}</title>
+    <link rel="stylesheet" href="../../assets/style/style.css" />
+    <script src="https://cdn.jsdelivr.net/npm/tocbot@4.8.1/dist/tocbot.min.js"></script>
+</head>
+<body>
+    <h1>{file_name_without_extension}</h1>
+    {html_content}
+    <script src="../../assets/script/script.js"></script>
+</body>
+</html>
+"""
+    return html_template
+
+def create_index_file(folder_path, file_name_without_extension, chapter_links):
+    """Create an index file with links to all chapter files."""
+    index_template = f"""
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{file_name_without_extension}</title>
+    <link rel="stylesheet" href="../../assets/style/style.css" />
+</head>
+<body>
+    <h1>{file_name_without_extension}</h1>
+    <ul>
+        {''.join(f'<li><a href="{link}.html">{link}</a></li>' for link in chapter_links)}
+    </ul>
+</body>
+</html>
+"""
+    # Save the index file
+    index_file_path = os.path.join(folder_path, f"{file_name_without_extension}.html")
+    with open(index_file_path, 'w', encoding='utf-8') as f:
+        f.write(index_template)
+
+def save_html_files(chunks, folder_path, file_name_without_extension):
+    """Save chunks as HTML files in the given folder and create an index file."""
+    chapter_links = []
+    for chunk in chunks:
+        # Extract the heading title for the filename
+        heading_title_match = re.search(r'^##\s+(.*)', chunk, re.MULTILINE)
+        heading_title = heading_title_match.group(1) if heading_title_match else "Untitled"
+
+        # Sanitize the heading title to use as a filename
+        sanitized_heading_title = sanitize_filename(heading_title)
+        chapter_links.append(sanitized_heading_title)
+
+        # Convert the chunk to HTML
+        html_content = convert_to_html(chunk, file_name_without_extension, heading_title)
+
+        # Save the HTML content to a file
+        file_name = f"{sanitized_heading_title}.html"
+        file_path = os.path.join(folder_path, file_name)
+        with open(file_path, 'w', encoding='utf-8') as f:
+            f.write(html_content)
+
+    # Create the index file
+    create_index_file(folder_path, file_name_without_extension, chapter_links)
+
+def update_library_json(file_name_without_extension):
+    """Update the library.json file with the new entry."""
+    json_dir = os.path.join(os.path.dirname(__file__), '../web/library')
+    json_file_path = os.path.join(json_dir, 'library.json')
+
+    # Ensure the library directory exists
+    os.makedirs(json_dir, exist_ok=True)
+
+    # Load existing library data or initialize an empty list
+    if os.path.exists(json_file_path):
+        with open(json_file_path, 'r', encoding='utf-8') as f:
+            try:
+                library_data = json.load(f)
+            except json.JSONDecodeError:
+                library_data = []
+    else:
+        library_data = []
+
+    # Append the new entry
+    library_data.append({
+        "title": file_name_without_extension,
+        "link": f"books/{file_name_without_extension}/{file_name_without_extension}.html",
+        "cover": f"assets/covers/{file_name_without_extension}.png",
+    })
+
+    # Save the updated library data back to the JSON file
+    with open(json_file_path, 'w', encoding='utf-8') as f:
+        json.dump(library_data, f, indent=4)
+
+def process_files_with_easyread_tag(directory):
+    """Process all .md files with the 'EasyRead' tag."""
+    # Clear the library.json file before processing
+    json_dir = os.path.join(os.path.dirname(__file__), '../web/library')
+    json_file_path = os.path.join(json_dir, 'library.json')
+    clear_library_json(json_file_path)
+
     for root, _, files in os.walk(directory):
-        for file_name in files:
-            if file_name.endswith('.html'):
-                file_path = os.path.join(root, file_name)
-                os.remove(file_path)
+        for file in files:
+            if file.endswith('.md'):
+                file_path = os.path.join(root, file)
+                with open(file_path, 'r', encoding='utf-8') as f:
+                    file_content = f.read()
 
-# Function to check if a file has the 'EasyRead' tag in its YAML front matter
-def has_easyread_tag(file_path):
-    with open(file_path, 'r', encoding='utf-8') as file:
-        content = file.read()
-        yaml_match = re.match(r'^---\n(.*?)\n---\n(.*)', content, re.DOTALL)
-        if yaml_match:
-            yaml_content = yaml_match.group(1)
-            yaml_data = yaml.safe_load(yaml_content)
-            if 'tags' in yaml_data and 'EasyRead' in yaml_data['tags']:
-                return True, yaml_match.group(2)
-    return False, None
+                # Extract YAML frontmatter and remaining content
+                yaml_frontmatter, remaining_content = extract_yaml_frontmatter(file_content)
 
-# Delete all existing .html files in the output directory
-delete_html_files(output_dir)
+                # Skip files without YAML frontmatter
+                if not yaml_frontmatter:
+                    continue
 
-# List to hold the library data
-library_data = []
+                # Check if the file has the 'EasyRead' tag
+                if 'EasyRead' not in yaml_frontmatter:
+                    continue
 
-# Iterate through all .md files in the OBSIDIAN_NOTES_DIR
-for root, _, files in os.walk(OBSIDIAN_NOTES_DIR):
-    for file_name in files:
-        if file_name.endswith('.md'):
-            markdown_file_path = os.path.join(root, file_name)
-            has_tag, markdown_content = has_easyread_tag(markdown_file_path)
-            if has_tag:
-                # Create a directory for the markdown file
-                file_name_without_extension = os.path.splitext(file_name)[0]
-                book_output_dir = os.path.join(output_dir, file_name_without_extension)
-                os.makedirs(book_output_dir, exist_ok=True)
+                # Split the remaining content into chunks
+                chunks = split_into_chunks(remaining_content)
 
-                print(f"{file_name_without_extension} ✅")
+                # Create a folder for the file in ../web/books
+                base_folder = os.path.join(os.path.dirname(__file__), '../web/books')
+                os.makedirs(base_folder, exist_ok=True)
+                folder_name = os.path.splitext(file)[0]
+                folder_path = os.path.join(base_folder, folder_name)
+                os.makedirs(folder_path, exist_ok=True)
 
-                # Split the markdown content by Heading 2
-                headings = re.split(r'(\n## .+)', markdown_content)
-                chapter_links = []
+                # Save the chunks as HTML files and create the index file
+                save_html_files(chunks, folder_path, folder_name)
 
-                for i in range(1, len(headings), 2):
-                    heading_title = headings[i].strip().lstrip('##').strip()
-                    chapter_content = headings[i] + headings[i + 1]
+                # Update the library.json file
+                update_library_json(folder_name)
 
-                    # Convert the Markdown content to HTML
-                    html_content = markdown2.markdown(chapter_content, extras=["header-ids"])
+                # Print the processed file name with a checkmark
+                print(f"{folder_name} ✅")
 
-                    # Define the HTML5 boilerplate template
-                    html_boilerplate = f"""
-                    <!DOCTYPE html>
-                    <html lang="en">
-                    <head>
-                        <meta charset="UTF-8">
-                        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                        <title>{heading_title}</title>
-                        <link rel="stylesheet" href="../../assets/style/style.css" />
-                        <script src="https://cdn.jsdelivr.net/npm/tocbot@4.8.1/dist/tocbot.min.js"></script>
-                    </head>
-                    <body>
-                        <h1>{file_name_without_extension}</h1>
-                        {html_content}
-                        <script src="../../assets/script/script.js"></script>
-                    </body>
-                    </html>
-                    """
+if __name__ == "__main__":
+    # Load the OBSIDIAN_NOTES_DIR environment variable
+    notes_dir = load_env_variable("OBSIDIAN_NOTES_DIR")
 
-                    # Define the output HTML file path
-                    chapter_file_name = f"{heading_title}.html".replace(" ", "_")
-                    chapter_file_path = os.path.join(book_output_dir, chapter_file_name)
+    # Clear the books folder before processing
+    books_folder = os.path.join(os.path.dirname(__file__), '../web/books')
+    clear_books_folder(books_folder)
 
-                    # Save the HTML content to the file
-                    with open(chapter_file_path, 'w', encoding='utf-8') as file:
-                        file.write(html_boilerplate)
-
-                    # Add the chapter link to the list
-                    chapter_links.append(f'<a href="{chapter_file_name}">{heading_title}</a>')
-
-                # Create an index HTML file for the book
-                index_content = f"""
-                <!DOCTYPE html>
-                <html lang="en">
-                <head>
-                    <meta charset="UTF-8">
-                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                    <title>{file_name_without_extension}</title>
-                    <link rel="stylesheet" href="../../assets/style/style.css" />
-                </head>
-                <body>
-                    <h1>{file_name_without_extension}</h1>
-                    <ul>
-                        {''.join(f'<li>{link}</li>' for link in chapter_links)}
-                    </ul>
-                </body>
-                </html>
-                """
-
-                # Define the output index HTML file path
-                index_file_path = os.path.join(book_output_dir, f"{file_name_without_extension}.html")
-
-                # Save the index HTML content to the file
-                with open(index_file_path, 'w', encoding='utf-8') as file:
-                    file.write(index_content)
-
-                # Add the book data to the library list
-                library_data.append({
-                    "title": file_name_without_extension,
-                    "link": f"books/{file_name_without_extension}/{file_name_without_extension}.html",
-                    "cover": f"assets/covers/{file_name_without_extension}.png",
-                })
-
-# Define the path to the library.json file
-library_json_path = os.path.join(json_dir, 'library.json')
-
-# Save the library data to the library.json file
-with open(library_json_path, 'w', encoding='utf-8') as json_file:
-    json.dump(library_data, json_file, ensure_ascii=False, indent=4)
+    # Process files with the 'EasyRead' tag
+    process_files_with_easyread_tag(notes_dir)
