@@ -1,8 +1,8 @@
 import os
 import re
 import markdown2
-import shutil  # For clearing the books folder
-import json  # For handling JSON data
+import shutil
+import json
 
 def load_env_variable(variable_name):
     """Load environment variable."""
