@@ -1,37 +1,12 @@
 [
     {
-        "title": "Angels and Demons",
-        "link": "books/Angels and Demons/Angels and Demons.html",
-        "cover": "assets/covers/Angels and Demons.png"
+        "title": "ISIS Inside the Army of Terror",
+        "link": "books/ISIS Inside the Army of Terror/ISIS Inside the Army of Terror.html",
+        "cover": "assets/covers/ISIS Inside the Army of Terror.png"
     },
     {
-        "title": "Brave New World",
-        "link": "books/Brave New World/Brave New World.html",
-        "cover": "assets/covers/Brave New World.png"
-    },
-    {
-        "title": "Dark Matter",
-        "link": "books/Dark Matter/Dark Matter.html",
-        "cover": "assets/covers/Dark Matter.png"
-    },
-    {
-        "title": "Pet Sematary",
-        "link": "books/Pet Sematary/Pet Sematary.html",
-        "cover": "assets/covers/Pet Sematary.png"
-    },
-    {
-        "title": "Project Hail Mary",
-        "link": "books/Project Hail Mary/Project Hail Mary.html",
-        "cover": "assets/covers/Project Hail Mary.png"
-    },
-    {
-        "title": "The Da Vinci Code",
-        "link": "books/The Da Vinci Code/The Da Vinci Code.html",
-        "cover": "assets/covers/The Da Vinci Code.png"
-    },
-    {
-        "title": "The Murder of Roger Ackroyd",
-        "link": "books/The Murder of Roger Ackroyd/The Murder of Roger Ackroyd.html",
-        "cover": "assets/covers/The Murder of Roger Ackroyd.png"
+        "title": "The Snowman",
+        "link": "books/The Snowman/The Snowman.html",
+        "cover": "assets/covers/The Snowman.png"
     }
 ]
