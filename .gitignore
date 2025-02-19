@@ -1,9 +1,0 @@
-# Ignore everything in the books directory and its subdirectories
-books/**
-
-# Do not ignore .epub files in the books directory and its subdirectories
-!books/**/*.epub
-
-# Ignore environment files and virtual environment directory
-.env
-venv/
