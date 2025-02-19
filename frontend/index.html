@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EasyRead</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600&display=swap");
+
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: "Inter", sans-serif;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: center;
+        min-height: 100vh;
+        background-color: #1e1e1e;
+        color: #f5f5f5;
+        overflow: auto; /* Allow body to scroll */
+      }
+
+      h1 {
+        font-family: "Space Grotesk", sans-serif;
+        font-weight: 600;
+        font-size: 3rem;
+        color: #dcef4a;
+        margin: 0;
+      }
+
+      .heading-container {
+        margin-top: 5%;
+        text-align: center;
+        animation: fadeIn 1s ease-in-out;
+      }
+
+      .heading-container p {
+        font-size: 1.2rem;
+        color: #a0a0a0;
+        margin-top: 0.5rem;
+      }
+
+      .search-container {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        margin: 2rem 0;
+        animation: slideIn 0.8s ease-in-out;
+      }
+
+      .search-container .search-box {
+        position: relative;
+        width: 80%;
+        max-width: 500px;
+      }
+
+      .search-container input {
+        width: 100%;
+        padding: 14px 20px 14px 40px; /* Adjust padding to accommodate the icon */
+        font-size: 1rem;
+        border-radius: 8px;
+        border: 0;
+        background-color: #272626;
+        color: #f5f5f5;
+        transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        font-family: "JetBrains Mono";
+      }
+
+      .search-container input:focus {
+        outline: none;
+      }
+
+      .search-container input::placeholder {
+        color: #a0a0a0;
+      }
+
+      .search-container .search-icon {
+        position: absolute;
+        left: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #a0a0a0;
+        pointer-events: none; /* Prevent the icon from interfering with input */
+      }
+
+      .book-container {
+        width: 90%;
+        max-width: 1200px;
+        display: grid;
+        grid-template-columns: repeat(
+          auto-fill,
+          minmax(160px, 1fr)
+        ); /* Slightly smaller columns */
+        gap: 1rem; /* Reduced gap for a more compact layout */
+        padding: 1rem;
+        margin-bottom: 2rem;
+        animation: fadeIn 1s ease-in-out;
+      }
+
+      .book-card {
+        background-color: #1a1a1a;
+        border-radius: 5px;
+        overflow: hidden;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        cursor: pointer;
+        position: relative;
+      }
+
+      .book-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+
+      .book-card img {
+        width: 100%;
+        height: 250px; /* Slightly smaller height for a more compact look */
+        object-fit: fill; /* Ensure the image covers the area */
+      }
+
+      /* Custom Scrollbar Styling */
+      body::-webkit-scrollbar {
+        width: 8px;
+      }
+
+      body::-webkit-scrollbar-track {
+        background-color: #1a1a1a;
+        border-radius: 10px;
+      }
+
+      body::-webkit-scrollbar-thumb {
+        background-color: #444;
+        border-radius: 10px;
+      }
+
+      body::-webkit-scrollbar-thumb:hover {
+        background-color: #555;
+      }
+
+      /* Animations */
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+
+      @keyframes slideIn {
+        from {
+          transform: translateY(-20px);
+          opacity: 0;
+        }
+        to {
+          transform: translateY(0);
+          opacity: 1;
+        }
+      }
+
+      /* Responsive Adjustments */
+      @media (max-width: 768px) {
+        h1 {
+          font-size: 2.5rem;
+        }
+
+        .heading-container p {
+          font-size: 1rem;
+        }
+
+        .search-container input {
+          width: 90%;
+        }
+
+        .book-container {
+          grid-template-columns: repeat(
+            auto-fill,
+            minmax(140px, 1fr)
+          ); /* Slightly smaller columns for tablets */
+        }
+
+        .book-card img {
+          height: 180px; /* Adjusted height for tablets */
+        }
+      }
+
+      @media (max-width: 480px) {
+        body {
+          background-color: rgb(20, 20, 20);
+        }
+        h1 {
+          font-size: 2rem;
+        }
+
+        .heading-container p {
+          font-size: 0.9rem;
+        }
+
+        .search-container input {
+          width: 70%;
+        }
+
+        .book-container {
+          grid-template-columns: repeat(3, 1fr); /* Three column layout */
+          gap: 0.5rem; /* Reduced gap for a more compact layout */
+        }
+
+        .book-card {
+          width: 100%; /* Ensure the book card takes full width of the column */
+        }
+
+        .book-card img {
+          width: 100%; /* Fill the width of the book card */
+          height: auto; /* Maintain aspect ratio */
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="heading-container">
+      <h1>EasyRead</h1>
+    </div>
+    <div class="search-container">
+      <div class="search-box">
+        <i class="fas fa-search search-icon"></i>
+        <input
+          type="text"
+          id="search-input"
+          placeholder="Search for a book..."
+          oninput="searchBooks()"
+        />
+      </div>
+    </div>
+    <div class="book-container" id="book-container"></div>
+    <script>
+      // Fetch books from library.json and load them into the container
+      async function loadBooks() {
+        const bookContainer = document.getElementById("book-container");
+        bookContainer.innerHTML = ""; // Clear existing content
+        try {
+          const response = await fetch("library/library.json"); // Fetch JSON file
+          if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+          }
+          const booksData = await response.json(); // Parse JSON data
+          booksData.forEach((book) => {
+            const card = document.createElement("div");
+            card.className = "book-card";
+            const img = document.createElement("img");
+            img.src = book.cover;
+            img.alt = book.title;
+            card.appendChild(img);
+            card.onclick = () => (window.location.href = book.link);
+            bookContainer.appendChild(card);
+          });
+        } catch (error) {
+          console.error("Error loading books:", error);
+          bookContainer.innerHTML = `<p style="color: var(--accent-color); text-align: center;">Failed to load books. Please try again later.</p>`;
+        }
+      }
+      // Search functionality
+      function searchBooks() {
+        const input = document.getElementById("search-input");
+        const filter = input.value.toLowerCase();
+        const cards = document.querySelectorAll(".book-card");
+        cards.forEach((card) => {
+          const bookTitle = card.querySelector("img").alt.toLowerCase();
+          if (bookTitle.includes(filter)) {
+            card.style.display = "block";
+          } else {
+            card.style.display = "none";
+          }
+        });
+      }
+      // Load books on page load
+      window.onload = loadBooks;
+    </script>
+  </body>
+</html>
