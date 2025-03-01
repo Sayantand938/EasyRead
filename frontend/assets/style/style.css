@@ -1,0 +1,232 @@
+@import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=Martian+Mono:wght@100..800&family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap");
+
+@font-face {
+  font-family: "Maple Mono";
+  src: url("../fonts/MapleMono-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Maple Mono";
+  src: url("../fonts/MapleMono-Medium.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Maple Mono";
+  src: url("../fonts/MapleMono-Bold.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+}
+
+body {
+  padding: 20px;
+  background-color: #1e1e1e;
+  color: #f1f1f1;
+  font-size: 1.3rem;
+  line-height: 1.6;
+  max-width: 800px;
+  margin: 0 auto;
+  font-family: "Maple Mono", monospace;
+  opacity: 0;
+  animation: fadeIn 0.8s ease-in-out forwards;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: #dcef4a;
+  font-family: "Martian Mono", monospace;
+}
+
+h1 {
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 1.5rem;
+  border-bottom: 2px solid #dcef4a;
+  padding-bottom: 0.5rem;
+  text-align: center;
+}
+
+h2 {
+  font-size: 1.75rem;
+  margin: 2rem 0 1rem;
+}
+
+h3 {
+  font-size: 1.5rem;
+  margin: 1.75rem 0 0.75rem;
+}
+
+h4,
+h5,
+h6 {
+  font-size: 1.25rem;
+  margin: 1.5rem 0 0.5rem;
+}
+
+p {
+  margin: 1rem 0;
+  font-weight: 500;
+}
+
+a {
+  color: #dcef4a;
+  text-decoration: none;
+  transition: color 0.3s ease;
+  font-family: "Martian Mono" !important;
+}
+
+a:hover {
+  color: #81c784;
+  text-decoration: underline;
+}
+
+pre {
+  background-color: #2e2e2e;
+  padding: 1rem;
+  border-radius: 8px;
+  color: #d1d1d1;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.9rem;
+  overflow-x: auto;
+  margin: 1.5rem 0;
+}
+
+code {
+  color: #ffcc00;
+  background-color: #2e2e2e;
+  padding: 0.2rem 0.4rem;
+  border-radius: 4px;
+  font-size: 0.9rem;
+}
+
+ul,
+ol {
+  margin: 1.5rem 0;
+  padding-left: 1.5rem;
+}
+
+li {
+  margin: 0.75rem 0;
+}
+
+blockquote {
+  border-left: 4px solid #dcef4a;
+  padding-left: 1rem;
+  margin: 1.5rem 0;
+  color: #ccc;
+  font-style: italic;
+}
+
+::-webkit-scrollbar {
+  width: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: #2e2e2e;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: white;
+  border-radius: 10px;
+  border: 3px solid #2e2e2e;
+}
+
+@media (max-width: 768px) {
+  body {
+    padding: 15px;
+    font-size: 0.9rem;
+  }
+
+  h1 {
+    font-size: 1.75rem;
+  }
+
+  h2 {
+    font-size: 1.5rem;
+  }
+
+  h3 {
+    font-size: 1.25rem;
+  }
+
+  h4,
+  h5,
+  h6 {
+    font-size: 1.1rem;
+  }
+
+  pre {
+    padding: 0.75rem;
+    font-size: 0.85rem;
+  }
+
+  code {
+    font-size: 0.85rem;
+  }
+
+  ul,
+  ol {
+    padding-left: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  body {
+    padding: 12px;
+    font-size: 1.1rem;
+    font-weight: bold;
+  }
+
+  p {
+    color: #d1d1d1;
+  }
+
+  h1 {
+    font-size: 1.3rem;
+  }
+
+  h2 {
+    font-size: 1.25rem;
+  }
+
+  h3 {
+    font-size: 1.1rem;
+  }
+
+  h4,
+  h5,
+  h6 {
+    font-size: 1rem;
+  }
+
+  pre {
+    padding: 0.5rem;
+    font-size: 0.8rem;
+  }
+
+  code {
+    font-size: 0.8rem;
+  }
+
+  ul,
+  ol {
+    padding-left: 0.75rem;
+  }
+}
